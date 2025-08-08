@@ -92,6 +92,59 @@ module UI
       end
     end
 
+    def add_attendee_ticket
+      view_all_attendees
+      print "\nEnter the ID of the attendee who purchased a ticket: "
+      attendee_id = gets.chomp.to_i
+
+      current_attendee = api_client.get_attendee(attendee_id)
+      if current_attendee[:error]
+        puts "Error: #{current_attendee[:error]}"
+      else
+        view_all_concerts
+        print "\nEnter the ID of the concert the attendee purchased ticket for: "
+        concert_id = gets.chomp.to_i
+
+        response = api_client.add_ticket(attendee_id, concert_id)
+
+        if response[:error]
+          puts "Error: #{response[:error]}"
+        else
+          puts "Ticket successfully added!"
+        end
+      end
+    end
+
+    def delete_attendee_ticket
+      view_all_attendees
+      print "\nEnter the ID of the attendee who sold their ticket: "
+      attendee_id = gets.chomp.to_i
+
+      current_attendee = api_client.get_attendee(attendee_id)
+      if current_attendee[:error]
+        puts "Error: #{current_attendee[:error]}"
+        return
+      end
+
+      print "\nEnter the ID of the concert the attendee sold their ticket for: "
+      concert_id = gets.chomp.to_i
+
+      print "Are you sure you want to delete this ticket? (y/n): "
+      confirmation = gets.chomp.downcase
+
+      if %w[y yes].include?(confirmation)
+        response = api_client.remove_ticket(attendee_id, concert_id)
+
+        if response[:error]
+          puts "Error: #{response[:error]}"
+        else
+          puts "Ticket successfully deleted."
+        end
+      else
+        puts "Deletion cancelled."
+      end
+    end
+
     private
 
     def display_attendee(attendee)

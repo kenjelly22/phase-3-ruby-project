@@ -8,6 +8,7 @@ class CLIInterface
   def initialize
     @api_client = APIClient.new
     @attendees_ui = UI::Attendees.new
+    @concerts_ui = UI::Concerts.new
   end
 
   def display_menu
@@ -38,7 +39,7 @@ class CLIInterface
 
       case choice
       when "1"
-        view_all_concerts
+        @concerts_ui.view_all_concerts
       when "2"
         @attendees_ui.view_all_attendees
       when "3"
@@ -54,9 +55,9 @@ class CLIInterface
       when "8"
         @attendees_ui.delete_attendee
       when "9"
-        add_attendee_ticket
+        @attendees_ui.add_attendee_ticket
       when "10"
-        delete_attendee_ticket
+        @attendees_ui.delete_attendee_ticket
       when "q", "quit", "exit"
         puts "Goodbye!"
         break
@@ -67,22 +68,6 @@ class CLIInterface
   end
 
   private
-
-  def view_all_concerts
-    puts "\n=== All Concerts ==="
-    response = @api_client.get_concerts
-
-    return unless response.is_a?(Array)
-
-    if response.empty?
-      puts "No concerts found"
-    else
-      response.each do |concert|
-        display_concert(concert)
-        puts "-" * 50
-      end
-    end
-  end
 
   def create_concert
     puts "\n=== Create New Concert ==="
@@ -185,59 +170,29 @@ class CLIInterface
     end
   end
 
-  def add_attendee_ticket
-    view_all_attendees
-    print "\nEnter the ID of the attendee who purchased a ticket: "
-    attendee_id = gets.chomp.to_i
+  # def add_attendee_ticket
+  #   view_all_attendees
+  #   print "\nEnter the ID of the attendee who purchased a ticket: "
+  #   attendee_id = gets.chomp.to_i
 
-    current_attendee = @api_client.get_attendee(attendee_id)
-    if current_attendee[:error]
-      puts "Error: #{current_attendee[:error]}"
-    else
-      view_all_concerts
-      print "\nEnter the ID of the concert the attendee purchased ticket for: "
-      concert_id = gets.chomp.to_i
+  #   current_attendee = @api_client.get_attendee(attendee_id)
+  #   if current_attendee[:error]
+  #     puts "Error: #{current_attendee[:error]}"
+  #   else
+  #     view_all_concerts
+  #     print "\nEnter the ID of the concert the attendee purchased ticket for: "
+  #     concert_id = gets.chomp.to_i
 
-      response = @api_client.add_ticket(attendee_id, concert_id)
+  #     response = @api_client.add_ticket(attendee_id, concert_id)
 
-      if response[:error]
-        puts "Error: #{response[:error]}"
-      else
-        puts "Ticket successfully added!"
-      end
+  #     if response[:error]
+  #       puts "Error: #{response[:error]}"
+  #     else
+  #       puts "Ticket successfully added!"
+  #     end
 
-    end
-  end
-
-  def delete_attendee_ticket
-    view_all_attendees
-    print "\nEnter the ID of the attendee who sold their ticket: "
-    attendee_id = gets.chomp.to_i
-
-    current_attendee = @api_client.get_attendee(attendee_id)
-    if current_attendee[:error]
-      puts "Error: #{current_attendee[:error]}"
-      return
-    end
-
-    print "\nEnter the ID of the concert the attendee sold their ticket for: "
-    concert_id = gets.chomp.to_i
-
-    print "Are you sure you want to delete this ticket? (y/n): "
-    confirmation = gets.chomp.downcase
-
-    if %w[y yes].include?(confirmation)
-      response = @api_client.remove_ticket(attendee_id, concert_id)
-
-      if response[:error]
-        puts "Error: #{response[:error]}"
-      else
-        puts "Ticket successfully deleted."
-      end
-    else
-      puts "Deletion cancelled."
-    end
-  end
+  #   end
+  # end
 
   def display_concert(concert)
     puts "Concert ID:  #{concert['id']}"
