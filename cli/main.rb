@@ -1,10 +1,13 @@
 require "rest-client"
 require "json"
 require_relative "api_client"
+require_relative "ui/attendees"
+require_relative "ui/concerts"
 
 class CLIInterface
   def initialize
     @api_client = APIClient.new
+    @attendees_ui = UI::Attendees.new
   end
 
   def display_menu
@@ -24,7 +27,7 @@ class CLIInterface
   end
 
   def run
-    puts "Welcome to the Pet Tracker CLI!"
+    puts "Welcome to the Concert Tracker CLI!"
     puts "This application connects to your Sinatra API."
     puts "Make sure your API server is running on http://localhost:9292"
     puts
@@ -37,7 +40,7 @@ class CLIInterface
       when "1"
         view_all_concerts
       when "2"
-        view_all_attendees
+        @attendees_ui.view_all_attendees
       when "3"
         create_concert
       when "4"
@@ -76,22 +79,6 @@ class CLIInterface
     else
       response.each do |concert|
         display_concert(concert)
-        puts "-" * 50
-      end
-    end
-  end
-
-  def view_all_attendees
-    puts "\n=== All Attendees ==="
-    response = @api_client.get_attendees
-
-    return unless response.is_a?(Array)
-
-    if response.empty?
-      puts "No attendees found"
-    else
-      response.each do |attendee|
-        display_attendee(attendee)
         puts "-" * 50
       end
     end
