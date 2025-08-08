@@ -101,7 +101,7 @@ module UI
       if current_attendee[:error]
         puts "Error: #{current_attendee[:error]}"
       else
-        view_all_concerts
+        UI::Concerts.new.view_all_concerts
         print "\nEnter the ID of the concert the attendee purchased ticket for: "
         concert_id = gets.chomp.to_i
 
