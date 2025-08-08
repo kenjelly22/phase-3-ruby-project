@@ -38,5 +38,36 @@ module UI
         puts " - No attendees yet"
       end
     end
+
+    def create_concert
+      puts "\n=== Create New Concert ==="
+
+      print "Band Name: "
+      band_name = gets.chomp
+
+      print "Event Date: "
+      event_date = gets.chomp
+
+      print "Venue: "
+      venue = gets.chomp
+
+      print "City (city, state): "
+      city = gets.chomp
+
+      data = {
+        band_name: band_name,
+        event_date: event_date,
+        venue: venue,
+        city: city,
+      }
+
+      response = api_client.new_concert(data)
+      if response[:error]
+        puts "Error: #{response[:error]}"
+      else
+        puts "Concert created successfully!"
+        display_concert(response)
+      end
+    end
   end
 end

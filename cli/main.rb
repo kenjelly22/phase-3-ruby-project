@@ -43,7 +43,7 @@ class CLIInterface
       when "2"
         @attendees_ui.view_all_attendees
       when "3"
-        create_concert
+        @concerts_ui.create_concert
       when "4"
         @attendees_ui.create_attendee
       when "5"
@@ -68,37 +68,6 @@ class CLIInterface
   end
 
   private
-
-  def create_concert
-    puts "\n=== Create New Concert ==="
-
-    print "Band Name: "
-    band_name = gets.chomp
-
-    print "Event Date: "
-    event_date = gets.chomp
-
-    print "Venue: "
-    venue = gets.chomp
-
-    print "City (city, state): "
-    city = gets.chomp
-
-    data = {
-      band_name: band_name,
-      event_date: event_date,
-      venue: venue,
-      city: city,
-    }
-
-    response = @api_client.new_concert(data)
-    if response[:error]
-      puts "Error: #{response[:error]}"
-    else
-      puts "Concert created successfully!"
-      display_concert(response)
-    end
-  end
 
   def update_concert
     view_all_concerts
