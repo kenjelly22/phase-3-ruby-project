@@ -287,7 +287,6 @@ class CLIInterface
         puts "Error: #{response[:error]}"
       else
         puts "Ticket successfully added!"
-        display_attendee(response)
       end
 
     end
@@ -307,12 +306,19 @@ class CLIInterface
     print "\nEnter the ID of the concert the attendee sold their ticket for: "
     concert_id = gets.chomp.to_i
 
-    response = @api_client.remove_ticket(attendee_id, concert_id)
+    print "Are you sure you want to delete this ticket? (y/n): "
+    confirmation = gets.chomp.downcase
 
-    if response[:error]
-      puts "Error: #{response[:error]}"
+    if %w[y yes].include?(confirmation)
+      response = @api_client.remove_ticket(attendee_id, concert_id)
+
+      if response[:error]
+        puts "Error: #{response[:error]}"
+      else
+        puts "Ticket successfully deleted."
+      end
     else
-      puts "Ticket successfully deleted."
+      puts "Deletion cancelled."
     end
   end
 
