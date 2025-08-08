@@ -115,23 +115,6 @@ class CLIInterface
     end
   end
 
-  def create_attendee
-    puts "\n=== Create New Attendee ==="
-
-    print "Name: "
-    name = gets.chomp
-
-    data = { name: name }
-
-    response = @api_client.new_attendee(data)
-    if response[:error]
-      puts "Error: #{response[:error]}"
-    else
-      puts "attendee created successfully!"
-      display_attendee(response)
-    end
-  end
-
   def update_concert
     view_all_concerts
     print "\nEnter the ID of the concert to update: "
