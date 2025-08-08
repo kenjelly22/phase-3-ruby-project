@@ -51,7 +51,7 @@ class CLIInterface
       when "6"
         @attendees_ui.update_attendee
       when "7"
-        delete_concert
+        @concerts_ui.delete_concert
       when "8"
         @attendees_ui.delete_attendee
       when "9"
@@ -64,44 +64,6 @@ class CLIInterface
       else
         puts "Invalid choice. Please try again."
       end
-    end
-  end
-
-  def delete_concert
-    view_all_concerts
-    print "\nEnter the ID of the concert to delete: "
-    id = gets.chomp.to_i
-
-    print "Are you sure you want to delete this concert? (y/n): "
-    confirmation = gets.chomp.downcase
-
-    if %w[y yes].include?(confirmation)
-      response = @api_client.remove_concert(id)
-
-      if response[:error]
-        puts "Error: #{response[:error]}"
-      else
-        puts "Concert deleted successfully!"
-      end
-    else
-      puts "Deletion cancelled."
-    end
-  end
-
-  def display_concert(concert)
-    puts "Concert ID:  #{concert['id']}"
-    puts "Band Name: #{concert['band_name']}"
-    puts "Event Date: #{concert['event_date']}"
-    puts "Venue: #{concert['venue']}"
-    puts "City: #{concert['city']}"
-
-    if concert["attendees"]&.any?
-      puts "Attendees:"
-      concert["attendees"].each do |attendee|
-        puts " - #{attendee['name']}"
-      end
-    else
-      puts " - No attendees yet"
     end
   end
 end

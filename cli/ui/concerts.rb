@@ -102,6 +102,27 @@ module UI
       end
     end
 
+    def delete_concert
+      view_all_concerts
+      print "\nEnter the ID of the concert to delete: "
+      id = gets.chomp.to_i
+
+      print "Are you sure you want to delete this concert? (y/n): "
+      confirmation = gets.chomp.downcase
+
+      if %w[y yes].include?(confirmation)
+        response = api_client.remove_concert(id)
+
+        if response[:error]
+          puts "Error: #{response[:error]}"
+        else
+          puts "Concert deleted successfully!"
+        end
+      else
+        puts "Deletion cancelled."
+      end
+    end
+
     def display_concert(concert)
       puts "Concert ID:  #{concert['id']}"
       puts "Band Name: #{concert['band_name']}"
