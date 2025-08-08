@@ -44,11 +44,11 @@ class CLIInterface
       when "3"
         create_concert
       when "4"
-        create_attendee
+        @attendees_ui.create_attendee
       when "5"
         update_concert
       when "6"
-        update_attendee
+        @attendees_ui.update_attendee
       when "7"
         delete_concert
       when "8"
@@ -161,38 +161,6 @@ class CLIInterface
     else
       puts "Concert updated successfully!"
       display_concert(response)
-    end
-  end
-
-  def update_attendee
-    view_all_attendees
-    print "\nEnter the ID of the attendee to update: "
-    id = gets.chomp.to_i
-
-    current_attendee = @api_client.get_attendee(id)
-    if current_attendee[:error]
-      puts "Error: #{current_attendee[:error]}"
-      return
-    end
-
-    puts "\nCurrent Attendee Data:"
-    display_attendee(current_attendee)
-
-    puts "\nEnter new values (press Enter to keep current value):"
-
-    print "Name: (#{current_attendee['name']})"
-    name = gets.chomp
-    name = current_attendee["name"] if name.empty?
-
-    data = { name: name }
-
-    response = @api_client.change_attendee(id, data)
-
-    if response[:error]
-      puts "Error: #{response[:error]}"
-    else
-      puts "Attendee updated successfully!"
-      display_attendee(response)
     end
   end
 
