@@ -52,7 +52,7 @@ class CLIInterface
       when "7"
         delete_concert
       when "8"
-        delete_attendee
+        @attendees_ui.delete_attendee
       when "9"
         add_attendee_ticket
       when "10"
@@ -179,27 +179,6 @@ class CLIInterface
         puts "Error: #{response[:error]}"
       else
         puts "Concert deleted successfully!"
-      end
-    else
-      puts "Deletion cancelled."
-    end
-  end
-
-  def delete_attendee
-    view_all_attendees
-    print "\nEnter the ID of the attendee to delete: "
-    id = gets.chomp.to_i
-
-    print "Are you sure you want to delete this attendee? (y/n): "
-    confirmation = gets.chomp.downcase
-
-    if %w[y yes].include?(confirmation)
-      response = @api_client.remove_attendee(id)
-
-      if response[:error]
-        puts "Error: #{response[:error]}"
-      else
-        puts "Attendee deleted successfully!"
       end
     else
       puts "Deletion cancelled."
